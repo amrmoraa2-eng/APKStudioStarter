@@ -25,8 +25,14 @@ jobs:
         run: |
           unzip -o APKStudioStarter.zip -d project
 
-      - name: Set up Android SDK
+            - name: Set up Android SDK
         uses: android-actions/setup-android@v3
+
+      - name: Install SDK packages
+        run: |
+          yes | sdkmanager --licenses
+          sdkmanager "platform-tools" "platforms;android-35" "build-tools;35.0.0"
+        
 
       - name: Install SDK packages
         run: |
