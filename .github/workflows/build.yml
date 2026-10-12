@@ -35,6 +35,7 @@ jobs:
       - name: Build APK
         run: |
           cd project
+          sed -i '/^android {/a\    compileOptions {\n        sourceCompatibility = JavaVersion.VERSION_17\n        targetCompatibility = JavaVersion.VERSION_17\n    }' app/build.gradle.kts
           gradle assembleDebug
 
       - name: Upload APK
