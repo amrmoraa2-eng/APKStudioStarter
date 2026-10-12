@@ -28,23 +28,20 @@ jobs:
         uses: android-actions/setup-android@v4
         with:
           packages: 'platform-tools'
-        
 
       - name: Install SDK packages
-        run: |
-          yes | sdkmanager --licenses
-          sdkmanager "platform-tools" "platforms;android-35" "build-tools;35.0.0"
+        run: sdkmanager "platforms;android-35" "build-tools;35.0.0"
 
       - name: Build APK
         run: |
-       cd APKStudioStarter
-        
-          
-          
-          
+          cd project
+          find . -maxdepth 3 -name gradlew -print
+          chmod +x gradlew
+          ./gradlew assembleDebug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: APKStudio-debug
-          path: project/APKStudioStarter/app/build/outputs/apk/debug/*.apk
+          path: project/**/build/outputs/apk/debug/*.apk
+          if-no-files-found: error
