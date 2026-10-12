@@ -15,28 +15,32 @@ jobs:
       - name: Get project files
         uses: actions/checkout@v4
 
-      - name: Extract project
-        run: unzip -o APKStudioStarter.zip -d .
-
       - name: Set up Java
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '17'
 
+      - name: Extract project
+        run: |
+          unzip -o APKStudioStarter.zip -d project
+
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3
 
-      - name: Set up Gradle
-        uses: gradle/actions/setup-gradle@v4
-        with:
-          gradle-version: '8.9'
+      - name: Install SDK packages
+        run: |
+          yes | sdkmanager --licenses
+          sdkmanager "platform-tools" "platforms;android-35" "build-tools;35.0.0"
 
       - name: Build APK
-        run: gradle assembleDebug
+        run: |
+          cd project/APKStudioStarter
+          chmod +x gradlew
+          ./gradlew assembleDebug
 
-      - name: Save APK
+      - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: APKStudio-debug
-          path: app/build/outputs/apk/debug/app-debug.apk
+          path: project/APKStudioStarter/app/build/outputs/apk/debug/app-debug.apk
